@@ -1,0 +1,15 @@
+[[queue]]
+name = "sync.storage.translation"
+processor = "synchronization_storage_queue_message_processor"
+
+[[queue]]
+name = "sync.storage.product_abstract"
+processor = "synchronization_storage_queue_message_processor"
+
+[[queue]]
+name = "sync.search.product"
+processor = "synchronization_search_queue_message_processor"
+
+[[queue]]
+name = "publish"
+processor = "event_queue_message_processor"
