@@ -2,7 +2,6 @@ use crate::models::Message;
 use crate::models::SyncRequest;
 use crate::synchronization_storage;
 
-pub const CHUNK_SIZE: u16 = 1000;
 pub const KV_PREFIX: &str = "kv:";
 
 pub fn process_messages(messages: &Vec<Message>) {
