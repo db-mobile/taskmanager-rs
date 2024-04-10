@@ -5,6 +5,8 @@ mod models;
 mod consumer;
 mod synchronization_storage;
 
+mod synchronization_search;
+
 mod task_manager;
 
 fn main() {

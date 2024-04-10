@@ -18,8 +18,8 @@ struct Config {
 
 pub fn run(queue_name: &str) {
     let config_path = "Queue.toml";
-    let config_content = fs::read_to_string(config_path).expect("Error reading config file");
-    let config: Config = toml::from_str(&config_content).expect("Error parsing config file");
+    let config_content = fs::read_to_string(config_path).expect("Error reading queue config file");
+    let config: Config = toml::from_str(&config_content).expect("Error parsing queue config file");
     let queue_config = config
         .queue
         .iter()

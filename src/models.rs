@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
@@ -24,7 +25,7 @@ pub struct WriteData {
     #[serde(flatten)]
     pub value: Value,
     pub resource: String,
-    pub params: Option<Vec<String>>,
+    pub params: Option<HashMap<String, String>>,
     pub store: Option<String>,
 }
 
@@ -33,7 +34,7 @@ pub struct DeleteData {
     pub key: String,
     pub value: DeleteValue,
     pub resource: String,
-    pub params: Option<Vec<String>>,
+    pub params: Option<HashMap<String, String>>,
     pub store: Option<String>,
 }
 
