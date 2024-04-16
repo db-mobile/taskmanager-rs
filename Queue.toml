@@ -11,7 +11,27 @@ chunk_size = 1000
 [[queue]]
 name = "sync.search.product"
 processor = "synchronization_search_queue_message_processor"
-chunk_size = 1
+chunk_size = 1000
+
+[[queue]]
+name = "sync.search.category"
+processor = "synchronization_search_queue_message_processor"
+chunk_size = 1000
+
+[[queue]]
+name = "sync.search.cms"
+processor = "synchronization_search_queue_message_processor"
+chunk_size = 1000
+
+[[queue]]
+name = "sync.search.return"
+processor = "synchronization_search_queue_message_processor"
+chunk_size = 1000
+
+[[queue]]
+name = "sync.search.merchant"
+processor = "synchronization_search_queue_message_processor"
+chunk_size = 1000
 
 [[queue]]
 name = "publish"

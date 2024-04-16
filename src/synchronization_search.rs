@@ -3,29 +3,33 @@ use elasticsearch::http::request::JsonBody;
 use futures::executor;
 use serde_json::{json, Value};
 
-pub fn write_bulk(data: &Vec<(String, String)>) -> Result <bool, elasticsearch::Error> {
-    let mut body: Vec<JsonBody<_>> = Vec::with_capacity(4);
+pub fn write_bulk(data: &Vec<(String, Value)>) -> Result <bool, elasticsearch::Error> {
+    let mut body: Vec<JsonBody<_>> = Vec::with_capacity(data.len() * 2);
 
-    body.push(json!({"index": {"_id": "1"}}).into());
-    body.push(json!({
-        "id": 1,
-        "user": "kimchy",
-        "post_date": "2009-11-15T00:00:00Z",
-        "message": "Trying out Elasticsearch, so far so good?"
-    }).into());
+    for (key, value) in data {
+        let index_body = json!({"index": {"_id": key}});
 
-    executor::block_on(index(body))
+        body.push(index_body.into());
+        body.push(value.clone().into());
+    }
+
+    let result = executor::block_on(index(body));
+
+    match result {
+        Ok(result) => Ok(result),
+        Err(e) => Err(e),
+    }
 }
 
-pub fn delete_bulk(data: &Vec<String>) -> Result <(), redis::RedisError> {
-    let transport = Transport::single_node("https://localhost").expect("Error creating transport");
+pub fn delete_bulk(data: &Vec<String>) -> Result <(), elasticsearch::Error> {
+    let transport = Transport::single_node("http://localhost").expect("Error creating transport");
     let client = Elasticsearch::new(transport);
 
     Ok(())
 }
 
 async fn index(data: Vec<JsonBody<Value>>) -> Result<bool, elasticsearch::Error> {
-    let transport = Transport::single_node("https://localhost")?;
+    let transport = Transport::single_node("http://localhost:9200")?;
     let client = Elasticsearch::new(transport);
 
     let response = client
@@ -33,8 +37,10 @@ async fn index(data: Vec<JsonBody<Value>>) -> Result<bool, elasticsearch::Error>
         .body(data)
         .send()
         .await?;
-
-    let response_body = response.json::<Value>().await?;
-
-    Ok(response_body["errors"].as_bool().unwrap() == false)
+println!("{:?}", response.status_code());
+    if response.status_code().is_success() {
+        Ok(true)
+    } else {
+        Ok(false)
+    }
 }
