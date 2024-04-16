@@ -1,6 +1,8 @@
+use std::time::Duration;
 use lapin::{options::*, Connection, ConnectionProperties, Channel};
 use lapin::types::{FieldTable};
 use futures_lite::stream::StreamExt;
+use tokio::time::timeout;
 use crate::models::Message;
 
 pub struct Consumer {
@@ -22,14 +24,14 @@ impl Consumer {
         let mut consumer = self.channel
             .basic_consume(
                 queue_name,
-                "",
+                "taskmanager-rs",
                 BasicConsumeOptions::default(),
                 FieldTable::default(),
             ).await?;
 
         let mut messages = vec![];
 
-        while let Some(delivery) = consumer.next().await {
+        while let Ok(Some(delivery)) = timeout(Duration::from_secs(1), consumer.next()).await {
             let delivery = delivery.expect("error in consumer");
 
             let message = Message {

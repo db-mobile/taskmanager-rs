@@ -25,7 +25,7 @@ pub struct WriteData {
     #[serde(flatten)]
     pub value: Value,
     pub resource: String,
-    pub params: Option<HashMap<String, String>>,
+    pub params: Option<Vec<String>>,
     pub store: Option<String>,
 }
 
